@@ -1,1 +1,2 @@
-{:application-name "TODO api"}
+{:application-name "TODO api"
+ :port 8000}
