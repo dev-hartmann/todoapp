@@ -6,9 +6,10 @@
 
 (defn -main
   [& args]
-  (let [config (if (nil? args) 
+  (let [config (if (nil? args)
                  (config/load-default-config)
                  (config/load-config (first args)))]
+    
     (server/start-server config app-routes)))
 
 (comment

@@ -7,5 +7,5 @@
     (is (not( nil? (SUT/load-config "test-config.edn")))))
   (testing "with default path"
     (is (not-empty (SUT/load-default-config))))
-  (testing "with path to non exitent"
+  (testing "with path to non existent file"
     (is (= nil (SUT/load-config "non-existent-file.edn")))))
