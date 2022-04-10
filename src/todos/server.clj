@@ -6,7 +6,7 @@
 (defn start-server [config handlers]
   (let [port (:port config)
         jetty (jetty/run-jetty handlers {:port port
-                               :join? false})]
+                                         :join? false})]
     (println (str "Starting server on port " (:port config)) " ...")
     (reset! server jetty)))
 

@@ -5,10 +5,13 @@
              [reitit.ring.coercion :as coercion]
              [reitit.ring :as ring]))
 
+(defn handler [_]
+  {:status 200, :body "ok"})
+
 (def app-routes
     (ring/ring-handler
      (ring/router
-      []
+      [["/" {:get handler}]]
       {:data {:muuntaja m/instance
               :middleware [params/wrap-params
                            muuntaja/format-middleware

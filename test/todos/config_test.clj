@@ -1,6 +1,6 @@
 (ns todos.config-test
-    (:require [clojure.test :refer [deftest testing is]]
-              [todos.config :as SUT]))
+  (:require [clojure.test :refer [deftest testing is]]
+            [todos.config :as SUT]))
 
 (deftest load-config-from-edn-file
   (testing "with specific path"
