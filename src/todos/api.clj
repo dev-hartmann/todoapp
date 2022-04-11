@@ -1,4 +1,4 @@
-(ns todos.routes
+(ns todos.api
   (:require  [ring.middleware.params :as params]
              [reitit.ring.middleware.muuntaja :as muuntaja]
              [muuntaja.core :as m]
@@ -8,7 +8,7 @@
 (defn handler [_]
   {:status 200, :body "ok"})
 
-(def app-routes
+(def api
     (ring/ring-handler
      (ring/router
       [["/" {:get handler}]]

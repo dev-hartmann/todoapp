@@ -1,4 +1,4 @@
-(ns todos.model
+(ns todos.model.todo
   (:require [clojure.spec.alpha :as s]))
 
 ;; task spec
@@ -11,4 +11,4 @@
 (s/def :todo/name string?)
 
 (s/def :model/todo (s/keys :req-un [:todo/name :todo/description]
-                     :opt-un [:todo/tasks]))
+                           :opt-un [:todo/tasks]))

@@ -1,4 +1,4 @@
-(ns todos.db
+(ns todos.dal.db
   (:require [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]
             [todos.config :as config]))
@@ -29,13 +29,11 @@
 
 (defn execute-db! [sql]
   (jdbc/execute! @db sql {:return-keys true
-                          :builder-fn rs/as-unqualified-maps}))
+                          :builder-fn rs/as-maps}))
 
 (defn execute-one-db! [sql]
   (jdbc/execute-one! @db sql {:return-keys true
-                          :builder-fn rs/as-unqualified-maps}))
-
-
+                              :builder-fn rs/as-unqualified-maps}))
 
 
 (defn- create-todo-table []

@@ -4,7 +4,7 @@
 
 (deftest load-config-from-edn-file
   (testing "with specific path"
-    (is (not( nil? (SUT/load-config "test-config.edn")))))
+    (is (not (nil? (SUT/load-config "test-config.edn")))))
   (testing "with default path"
     (is (not-empty (SUT/load-default-config))))
   (testing "with path to non existent file"

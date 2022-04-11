@@ -1,7 +1,7 @@
 (ns todos.app
   (:require [todos.config :as config]
             [todos.server :as server]
-            [todos.routes :refer [app-routes]])
+            [todos.api :refer [api]])
   (:gen-class))
 
 (defn -main
@@ -10,7 +10,7 @@
                  (config/load-default-config)
                  (config/load-config (first args)))]
     
-    (server/start-server config app-routes)))
+    (server/start-server config api)))
 
 (comment
   (-main)

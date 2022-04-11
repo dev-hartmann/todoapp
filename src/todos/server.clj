@@ -4,8 +4,8 @@
 (defonce server (atom nil))
 
 (defn start-server [config handlers]
-  (let [port (:port (:server config))
-        jetty (jetty/run-jetty handlers {:port port
+  (let [port  (:port (:server config))
+        jetty (jetty/run-jetty handlers {:port  port
                                          :join? false})]
     (println (str "Starting server on port " port) " ...")
     (reset! server jetty)))

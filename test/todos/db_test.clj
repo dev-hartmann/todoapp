@@ -1,7 +1,7 @@
 (ns todos.db-test
   (:require [clojure.test :refer [deftest is testing]]
             [todos.config :as config]
-            [todos.db :as SUT]))
+            [todos.dal.db :as SUT]))
 
 (deftest db-config
   (testing "creating database connection from system config"
