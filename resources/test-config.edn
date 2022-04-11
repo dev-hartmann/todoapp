@@ -1,5 +1,5 @@
 {:server {:application-name "TODO api test"
-          :port 6666}
- :db {:name "todos"
-      :user "test-user"
-      :password "test-pw"}}
+          :port             6666}
+ :db     {:name     "todos"
+          :user     "test-user"
+          :password "test-pw"}}
