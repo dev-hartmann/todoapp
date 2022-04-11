@@ -3,7 +3,7 @@
             [todos.config :as config]
             [todos.db :as SUT]))
 
-(deftest db-connection
+(deftest db-config
   (testing "creating database connection from system config"
     (let [test-config (SUT/create-db-config (config/load-config "test-config.edn"))]
       (is (not-empty test-config))
