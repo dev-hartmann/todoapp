@@ -11,10 +11,10 @@
         host      (or (:host db-config) "localhost")
         user      (:user db-config)
         password  (:password db-config)]
-    {:dbtype "postgresql"
-     :dbname name
-     :host host
-     :user user
+    {:dbtype   "postgresql"
+     :dbname   name
+     :host     host
+     :user     user
      :password password}))
 
 (defn start-db [config]
@@ -25,15 +25,19 @@
 (defn stop-db []
   (println (str "Disconnecting from database ..."))
   (when @db
-    (.close @db)))
+    (-> @db
+        (.getConnection)
+        (.close))
+    (reset! db nil)))
+
 
 (defn execute-db! [sql]
   (jdbc/execute! @db sql {:return-keys true
-                          :builder-fn rs/as-maps}))
+                          :builder-fn  rs/as-maps}))
 
 (defn execute-one-db! [sql]
   (jdbc/execute-one! @db sql {:return-keys true
-                              :builder-fn rs/as-unqualified-maps}))
+                              :builder-fn  rs/as-unqualified-maps}))
 
 
 (defn- create-todo-table []
@@ -47,13 +51,22 @@
 (defn- create-task-table []
   (execute-db! ["CREATE TABLE task (
   id SERIAL PRIMARY KEY,
-  todo_id INT NOT NULL,
+  todo_id INT NOT NULL REFERENCES todo ON DELETE CASCADE,
   name TEXT NOT NULL,
   CONSTRAINT fk_todo FOREIGN KEY(todo_id) REFERENCES todo(id))"]))
+
+(defn- drop-db []
+  (execute-db! ["DROP TABLE IF EXISTS todo CASCADE"])
+  (execute-db! ["DROP TABLE IF EXISTS task CASCADE"]))
 
 
 (comment
   (start-db (config/load-default-config))
+  (drop-db)
+  (def con (.getConnection @db))
+  con
+  (.stop con)
+  (stop-db)
   @db
   (create-todo-table)
   (create-task-table)
