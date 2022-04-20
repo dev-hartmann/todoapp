@@ -20,15 +20,3 @@
     (add-shutdown-hook)
     (db/start-db config)
     (server/start-server config api)))
-
-(defn stop []
-  (println "Stopping...")
-  (db/stop-db)
-  (server/stop-server))
-
-(comment
-  (-main)
-  (stop)
-  (db/stop-db)
-  (server/stop-server))
-

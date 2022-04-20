@@ -113,23 +113,3 @@
                           (hh/set {:name name})
                           (hh/where [:= :id :?id])
                           (sql/format {:params {:id task-id}}))))
-
-
-(comment
-  (create-todo {:name "second test" :description "tested from repl test"})
-  (get-todo 0)
-  (todo-exists? 1)
-  (get-todo 2)
-  (get-all-todos)
-  (def test-data [{:todo/id 1, :todo/name "test from repl", :todo/description "tested from repl", :task/id nil, :task/todo_id nil, :task/name nil}
-                  {:todo/id 2, :todo/name "test from repl", :todo/description "tested from repl", :task/id nil, :task/todo_id nil, :task/name nil}])
-  (map #(into {} (remove (fn [[_ v]] (nil? v)) %)) test-data)
-  (delete-todo 2)
-  (get-tasks-for-todo 1)
-  (delete-task  7)
-  (update-task 4 {:name "updated task number for with new text"})
-
-  (add-task 1 {:name "test task 1 todo 1"})
-  (delete-todo 1)
-  (get-tasks-for-todo 1)
-  (update-todo 3 {:name "updated todo" :description "updated description"}))

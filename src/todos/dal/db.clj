@@ -40,7 +40,6 @@
         (.close))
     (reset! db nil)))
 
-
 (defn execute-db! [sql]
   (jdbc/execute! @db sql {:return-keys true
                           :builder-fn  rs/as-maps}))
@@ -48,14 +47,3 @@
 (defn execute-one-db! [sql]
   (jdbc/execute-one! @db sql {:return-keys true
                               :builder-fn  rs/as-unqualified-maps}))
-
-(comment
-  (start-db (config/load-default-config))
-  (run-migrations!)
-  (r/rollback @db)
-  (def con (.getConnection @db))
-  con
-  (.stop con)
-  (stop-db)
-  @db
-  (jdbc/execute! @db ["INSERT INTO tasks"]))

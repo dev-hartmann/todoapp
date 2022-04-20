@@ -19,7 +19,3 @@
 
 (defn current-config []
   @config)
-
-(comment
-  (load-default-config)
-  (file-exists? default-config))
