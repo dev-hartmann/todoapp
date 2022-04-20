@@ -25,9 +25,9 @@
       [])))
 
 (defn- result->todos [entries]
-  (let [cleaned-entries  (remove-nil-values entries)
-        todo  (entry->todo (first cleaned-entries))
-        tasks  (entries->tasks cleaned-entries)]
+  (let [cleaned-entries (remove-nil-values entries)
+        todo            (entry->todo (first cleaned-entries))
+        tasks           (entries->tasks cleaned-entries)]
     (assoc todo :tasks tasks)))
 
 (defn task-exists-for-todo? [todo-id task-id]
@@ -67,7 +67,6 @@
                                    (hh/left-join :task [:= :todo.id :task.todo_id])
                                    (hh/where [:= :todo.id :?id])
                                    (sql/format {:params {:id id}})))]
-    (println result)
     (when-not (empty? result)
       (result->todos result))))
 
@@ -78,15 +77,16 @@
 
 (defn update-todo [id {:keys [name description]}]
   (db/execute-one-db! (-> (hh/update :todo)
-                          (hh/set {:name name
+                          (hh/set {:name        name
                                    :description description})
                           (hh/where [:= :id :?id])
                           (sql/format {:params {:id id}}))))
 
 (defn delete-todo [id]
-  (db/execute-one-db! (-> (hh/delete-from :todo)
-                          (hh/where [:= :id :?id])
-                          (sql/format {:params {:id id}}))))
+  (let [result (db/execute-one-db! (-> (hh/delete-from :todo)
+                                       (hh/where [:= :id :?id])
+                                       (sql/format {:params {:id id}})))]
+    (:id result)))
 
 ;; task CRUD
 (defn get-tasks-for-todo [id]
@@ -98,43 +98,38 @@
       (map #(entry->task %) result))))
 
 (defn add-task [todo-id task]
-  (if (todo-exists? todo-id)
-    (db/execute-one-db! (-> (hh/insert-into :task)
-                            (hh/values [(assoc task :todo_id todo-id)])
-                            (sql/format)))
-    (println (str "todo with id " todo-id " not found!"))))
+  (db/execute-one-db! (-> (hh/insert-into :task)
+                          (hh/values [(assoc task :todo_id todo-id)])
+                          (sql/format))))
 
-(defn delete-task [todo-id task-id]
-  (if (todo-exists? todo-id)
-    (db/execute-one-db! (-> (hh/delete-from :task)
-                            (hh/where [:= :id :?id])
-                            (sql/format {:params {:id task-id}})))
-    (println (str "todo with id " todo-id " not found!"))))
+(defn delete-task [task-id]
+  (let [result (db/execute-one-db! (-> (hh/delete-from :task)
+                                       (hh/where [:= :id :?id])
+                                       (sql/format {:params {:id task-id}})))]
+    (:id result)))
 
-(defn update-task [todo-id task-id {:keys [name]}]
-  (if (task-exists-for-todo? todo-id task-id)
-    (db/execute-one-db! (-> (hh/update :task)
-                            (hh/set {:name name})
-                            (hh/where [:= :id :?id])
-                            (sql/format {:params {:id task-id}})))
-    (println (str "todo with id " todo-id " or task with id" task-id "not found!"))))
+(defn update-task [task-id {:keys [name]}]
+  (db/execute-one-db! (-> (hh/update :task)
+                          (hh/set {:name name})
+                          (hh/where [:= :id :?id])
+                          (sql/format {:params {:id task-id}}))))
 
 
 (comment
-  (create-todo {:name "second test" :description "tested from repl"})
+  (create-todo {:name "second test" :description "tested from repl test"})
   (get-todo 0)
   (todo-exists? 1)
-  (get-todo 1)
+  (get-todo 2)
   (get-all-todos)
   (def test-data [{:todo/id 1, :todo/name "test from repl", :todo/description "tested from repl", :task/id nil, :task/todo_id nil, :task/name nil}
                   {:todo/id 2, :todo/name "test from repl", :todo/description "tested from repl", :task/id nil, :task/todo_id nil, :task/name nil}])
   (map #(into {} (remove (fn [[_ v]] (nil? v)) %)) test-data)
-  (delete-todo 4)
+  (delete-todo 2)
   (get-tasks-for-todo 1)
-  (delete-task 1 1)
-  (update-task 1 4 {:name "updated task number for with new text"})
+  (delete-task  7)
+  (update-task 4 {:name "updated task number for with new text"})
 
-  (add-task 1 {:name "test 2 task"})
+  (add-task 6 {:name "test task 2 todo 6"})
   (delete-todo 1)
-  (get-tasks-for-todo 1)
+  (get-tasks-for-todo 6)
   (update-todo 3 {:name "updated todo" :description "updated description"}))

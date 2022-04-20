@@ -1,6 +1,7 @@
 {:secrets #include #join [#env HOME "/.secrets.edn"]
- :server {:application-name "TODO api" 
-          :port 8000}
+ :application {:name "Todo Api"
+               :version "0.0.1"}
+ :server {:port 8000}
  :db {:name "todos"
       :user #ref [:secrets :db-user]
       :password #ref [:secrets :db-password]}}
