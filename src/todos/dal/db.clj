@@ -1,10 +1,19 @@
 (ns todos.dal.db
   (:require [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]
-            [todos.config :as config]))
+            [ragtime.jdbc :as rjdbc]
+            [todos.config :as config]
+            [ragtime.repl :as r]))
 
 (defonce db (atom nil))
 
+(defn- create-ragtime-config []
+  {:datastore (rjdbc/sql-database {:connection  (.getConnection @db)})
+   :migrations (rjdbc/load-resources "migrations")})
+
+(defn- run-migrations! []
+  (let [config (create-ragtime-config)]
+    (r/migrate config)))
 (defn create-db-config [config]
   (let [db-config (:db config)
         name      (:name db-config)
@@ -20,7 +29,8 @@
 (defn start-db [config]
   (let [db-config (create-db-config config)]
     (println (str "Connecting to database ..."))
-    (reset! db (jdbc/get-datasource db-config))))
+    (reset! db (jdbc/get-datasource db-config))
+    (run-migrations!)))
 
 (defn stop-db []
   (println (str "Disconnecting from database ..."))
@@ -39,35 +49,13 @@
   (jdbc/execute-one! @db sql {:return-keys true
                               :builder-fn  rs/as-unqualified-maps}))
 
-
-(defn- create-todo-table []
-  (execute-db! ["CREATE TABLE todo (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  description TEXT NOT NULL)"]))
-
-
-
-(defn- create-task-table []
-  (execute-db! ["CREATE TABLE task (
-  id SERIAL PRIMARY KEY,
-  todo_id INT NOT NULL REFERENCES todo ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  CONSTRAINT fk_todo FOREIGN KEY(todo_id) REFERENCES todo(id))"]))
-
-(defn- drop-db []
-  (execute-db! ["DROP TABLE IF EXISTS todo CASCADE"])
-  (execute-db! ["DROP TABLE IF EXISTS task CASCADE"]))
-
-
 (comment
   (start-db (config/load-default-config))
-  (drop-db)
+  (run-migrations!)
+  (r/rollback @db)
   (def con (.getConnection @db))
   con
   (.stop con)
   (stop-db)
   @db
-  (create-todo-table)
-  (create-task-table)
   (jdbc/execute! @db ["INSERT INTO tasks"]))

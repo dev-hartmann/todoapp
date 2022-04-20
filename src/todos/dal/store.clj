@@ -129,7 +129,7 @@
   (delete-task  7)
   (update-task 4 {:name "updated task number for with new text"})
 
-  (add-task 6 {:name "test task 2 todo 6"})
+  (add-task 1 {:name "test task 1 todo 1"})
   (delete-todo 1)
-  (get-tasks-for-todo 6)
+  (get-tasks-for-todo 1)
   (update-todo 3 {:name "updated todo" :description "updated description"}))
