@@ -7,4 +7,3 @@
     (is (= (SUT/api {:uri "/non-existent-route"})
            {:status 404
             :body   "Not found"}))))
-
