@@ -57,4 +57,3 @@
                                        :body   "Not allowed"})
       :not-acceptable     (constantly {:status 406
                                        :body   "Not acceptable"})}))))
-

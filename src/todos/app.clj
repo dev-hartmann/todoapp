@@ -20,3 +20,8 @@
     (add-shutdown-hook)
     (db/start-db config)
     (server/start-server config api)))
+
+(comment
+  (def config (config/load-default-config))
+  (db/start-db config)
+  (server/start-server config api))

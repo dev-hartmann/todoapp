@@ -6,8 +6,10 @@
 
 (defn status-handler [_]
   (let [config (config/current-config)
-        status-info {:application config}]
+        status-info (:application config)]
     {:status 200 :bodys status-info}))
+
+(comment (status-handler nil))
 
 (defn get-todos-handler [_]
   (let [todos (store/get-all-todos)]
